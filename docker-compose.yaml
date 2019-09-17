@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+  elastic:
+    container_name: elastic
+    restart: always
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
+    environment:
+      - node.name=es01
+      - cluster.initial_master_nodes=es01
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./esdata:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    networks: 
+      - esnet
+    
+  kibana:
+    container_name: kibana
+    restart: always
+    image: docker.elastic.co/kibana/kibana:7.3.1
+    networks:
+      - esnet
+    volumes:
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - 5601:5601
+    depends_on: 
+      - elastic
+
+  node:
+    container_name: node-mongo
+    restart: always
+    image: node:10.16-alpine
+    user: node
+    working_dir: /home/node/beacon
+    networks:
+      - esnet
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URL=${MONGODB_URL}
+      - channelAccessToken=${channelAccessToken}
+      - channelSecret=${channelSecret}
+      - reportGroupId=${reportGroupId}
+      - elasticConfig=http://elastic:9200
+    volumes:
+      - ../beacon:/home/node/beacon
+    ports:
+      - 3000:3000
+    command: "npm run serve"
+
+networks:
+  esnet:
