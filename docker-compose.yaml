@@ -26,6 +26,8 @@ services:
     container_name: kibana
     restart: always
     image: docker.elastic.co/kibana/kibana:7.3.1
+    environment:
+      - XPACK_MONITORING_KIBANA_COLLECTION_ENABLED=true
     networks:
       - esnet
     volumes:
@@ -51,6 +53,7 @@ services:
       - channelSecret=${channelSecret}
       - reportGroupId=${reportGroupId}
       - elasticConfig=http://elastic:9200
+      - TZ=Asia/Bangkok
     volumes:
       - ../beacon:/home/node/beacon
     ports:
