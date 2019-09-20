@@ -32,6 +32,11 @@
  * THE SOFTWARE.
  */
 
+ .table > tbody > tr > td div > span > img  { /*make circle image*/
+  border-radius:50%;
+  width: 7%;
+   }
+
  .table > tbody > tr > td dd > span > img  { /*make circle image*/
   border-radius:50%;
   width: 7%;
