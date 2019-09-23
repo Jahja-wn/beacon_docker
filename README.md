@@ -47,7 +47,7 @@ This project has created based on Docker for Linux Host. In this case, we use Li
   ~/beacon_docker > mv ./nginx/nginx.yaml ./nginx/nginx-pre.yaml
   ~/beacon_docker > mv docker-compose-prod.yaml docker-compose.yaml
   ~/beacon_docker > mv ./nginx/nginx-prod.yaml ./nginx/nginx.yaml
-  ~/beacon_docker > docker-compose up -d --force-recreate --no-deps nginx
+  ~/beacon_docker > docker-compose up -d --force-recreate --no-deps webserver
   ```
   Your VM should be accessed by HTTPS after this step.
 
