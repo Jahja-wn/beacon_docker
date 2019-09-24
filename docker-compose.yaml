@@ -17,6 +17,7 @@ services:
         hard: -1
     volumes:
       - ./esdata:/usr/share/elasticsearch/data
+      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - 9200:9200
     networks: 
@@ -26,12 +27,13 @@ services:
     container_name: kibana
     restart: always
     image: docker.elastic.co/kibana/kibana:7.3.1
-    environment:
-      - XPACK_MONITORING_KIBANA_COLLECTION_ENABLED=true
     networks:
       - esnet
     volumes:
-      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./kibana/img/green.png:/usr/share/kibana/optimize/bundles/src/legacy/ui/public/field_editor/components/field_format_editor/editors/url/icons/green.png
+      - ./kibana/img/grey.png:/usr/share/kibana/optimize/bundles/src/legacy/ui/public/field_editor/components/field_format_editor/editors/url/icons/grey.png
+      - ./kibana/commons.style.css:/usr/share/kibana/optimize/bundles/commons.style.css
     ports:
       - 5601:5601
     depends_on: 
