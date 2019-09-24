@@ -13,8 +13,8 @@
   overflow-x: hidden;
   min-width: 100%;
   min-height: 100%;
-}
-.table > tbody > tr > td >div > span > img[src*="profile.line"]{
+} 
+.table > tbody > tr > td >div > span > img[src*="profile.line"]{ /*make  img as a circle */
   border-radius: 50%;
   width:50px;
   height: 50px;
