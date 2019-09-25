@@ -11,6 +11,7 @@ services:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - TZ=Asia/Bangkok
     ulimits:
       memlock:
         soft: -1
@@ -29,6 +30,8 @@ services:
     image: docker.elastic.co/kibana/kibana:7.3.1
     networks:
       - esnet
+    environment:
+      - TZ=Asia/Bangkok
     volumes:
       - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
       - ./kibana/img/green.png:/usr/share/kibana/optimize/bundles/src/legacy/ui/public/field_editor/components/field_format_editor/editors/url/icons/green.png
@@ -69,6 +72,8 @@ services:
     ports:
       - 80:80
       - 443:443
+    environment:
+      - TZ=Asia/Bangkok
     volumes:
       - app-dir:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
