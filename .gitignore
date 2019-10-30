@@ -1,1 +1,5 @@
-esdata/
+esdata
+certbot-*
+dhparam
+jenkins
+.vscode
