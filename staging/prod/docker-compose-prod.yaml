@@ -63,8 +63,8 @@ services:
     volumes:
       - ../beacon:/home/node/beacon
     ports:
-      - 3000:3001
-    command: "npm run dev"
+      - 3000:3000
+    command: "npm run staging"
 
   jenkins:
     image: jenkins/jenkins:lts
