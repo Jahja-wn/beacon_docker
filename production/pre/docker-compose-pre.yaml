@@ -2,51 +2,43 @@ version: '3'
 
 services:
   elastic:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
     container_name: elastic
     restart: always
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.3.1
     environment:
       - node.name=es01
       - cluster.initial_master_nodes=es01
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-      - TZ=Asia/Bangkok
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - ./esdata:/usr/share/elasticsearch/data
-      - ./esbackup:/usr/share/elasticsearch/backup
-      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - 9200:9200
     networks: 
       - esnet
     
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.3.1
     container_name: kibana
     restart: always
+    image: docker.elastic.co/kibana/kibana:7.3.1
     networks:
       - esnet
-    environment:
-      - TZ=Asia/Bangkok
     volumes:
-      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
-      - ./kibana/img/green.png:/usr/share/kibana/optimize/bundles/src/legacy/ui/public/field_editor/components/field_format_editor/editors/url/icons/green.png
-      - ./kibana/img/grey.png:/usr/share/kibana/optimize/bundles/src/legacy/ui/public/field_editor/components/field_format_editor/editors/url/icons/grey.png
-      - ./kibana/commons.style.css:/usr/share/kibana/optimize/bundles/commons.style.css
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
     ports:
       - 5601:5601
     depends_on: 
       - elastic
 
   node:
-    image: node:10.16-alpine
     container_name: node
     restart: always
+    image: node:10.16-alpine
     user: node
     working_dir: /home/node/beacon
     networks:
@@ -59,26 +51,11 @@ services:
       - channelSecret=${channelSecret}
       - reportGroupId=${reportGroupId}
       - elasticConfig=http://elastic:9200
-      - TZ=Asia/Bangkok
     volumes:
       - ../beacon:/home/node/beacon
     ports:
-      - 3000:3000
-    command: "npm run serve"
-
-  jenkins:
-    image: jenkins/jenkins:lts
-    container_name: jenkins
-    restart: always
-    user: jenkins
-    working_dir: /home/jenkins/beacon
-    ports:
-      - 8080:8080
-      - 50000:50000
-    environment:
-      - TZ=Asia/Bangkok
-    volumes:
-      - ./jenkins:/var/jenkins_home
+      - 3001:3000
+    command: "npm run dev"
 
   webserver:
     image: nginx:mainline-alpine
@@ -87,14 +64,11 @@ services:
     ports:
       - 80:80
       - 443:443
-    environment:
-      - TZ=Asia/Bangkok
     volumes:
       - app-dir:/var/www/html
       - ./nginx-conf:/etc/nginx/conf.d
       - ./certbot-etc:/etc/letsencrypt
       - ./certbot-var:/var/lib/letsencrypt
-      - dhparam:/etc/ssl/certs
     depends_on:
       - node
     networks:
@@ -109,7 +83,7 @@ services:
       - app-dir:/var/www/html
     depends_on:
       - webserver
-    command: certonly --webroot --webroot-path=/var/www/html --email jitlada.supreeyaporn@global.ntt --agree-tos --no-eff-email -d linebeacon.southcentralus.cloudapp.azure.com
+    command: certonly --webroot --webroot-path=/var/www/html --email jitlada.supreeyaporn@global.ntt --agree-tos --no-eff-email -d linebeacon-test.southeastasia.cloudapp.azure.com
 
 volumes:
   app-dir:
@@ -122,7 +96,7 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/LineBeaconAdmin/beacon_docker/dhparam/
+      device: /home/LineBeaconAdmin/docker/dhparam/
       o: bind
 
 networks:
